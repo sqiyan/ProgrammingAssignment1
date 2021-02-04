@@ -267,12 +267,19 @@ char *shellReadLine(void)
   /** TASK 1 **/
   // read one line from stdin using getline()
 
+  char *buffer = malloc(3);
+  size_t len = 3;
+  if (buffer != NULL) getline(&buffer, &len, stdin);
+  else {
+    perror("something wrong somewhere");
+  }
+
   // 1. Allocate a memory space to contain the string of input from stdin using malloc. Malloc should return a char* that persists even after this function terminates.
   // 2. Check that the char* returned by malloc is not NULL
   // 3. Fetch an entire line from input stream stdin using getline() function. getline() will store user input onto the memory location allocated in (1)
   // 4. Return the char*
 
-  return NULL;
+  return buffer;
 }
 
 /**
@@ -288,7 +295,27 @@ char **shellTokenizeInput(char *line)
   // 3. Tokenize the *line using strtok() function
   // 4. Return the char **
 
-  return NULL;
+
+  //pointer(*) to an array of pointers(*) to char arrays--> char **  --> array of strings --> array of char arrays
+  char **token_positions = malloc(sizeof(char *) * 8);
+  //pointer to char array for string until delimiter
+  char *token = strtok(line, " ");
+  //initialize index for while loop
+  int index = 0;
+  //assign first string to token_positions array
+  token_positions[index] = token;
+  index++;
+  while (token != NULL)
+  {
+      // Tokenize the rest of the command
+      token = strtok(NULL, " ");      //continue finding the next token
+      token_positions[index] = token; //store the position
+      index++;
+  }
+
+  token_positions[index] = NULL;
+
+  return token_positions;
 }
 
 /**
@@ -321,11 +348,17 @@ void shellLoop(void)
 
 int main(int argc, char **argv)
 {
-
-  printf("Shell Run successful. Running now: \n");
-
-  // Run command loop
-  shellLoop();
-
-  return 0;
+   printf("Shell Run successful. Running now: \n");
+ 
+ char* line = shellReadLine();
+ printf("The fetched line is : %s \n", line);
+ 
+ char** args = shellTokenizeInput(line);
+ printf("The first token is %s \n", args[0]);
+ printf("The second token is %s \n", args[1]);
+ printf("The third token is %s \n", args[2]);
+ 
+ free(line);
+ free(args);
+ return 0;
 }
