@@ -272,7 +272,15 @@ char *shellReadLine(void)
   // 3. Fetch an entire line from input stream stdin using getline() function. getline() will store user input onto the memory location allocated in (1)
   // 4. Return the char*
 
-  return NULL;
+  size_t size = 0;
+  char *buffer = malloc(sizeof(char) * 10);
+  ssize_t nread;
+
+  if (buffer != NULL) {
+    nread = getline(&buffer, &size, stdin);
+  }
+
+  return buffer;
 }
 
 /**
@@ -288,7 +296,31 @@ char **shellTokenizeInput(char *line)
   // 3. Tokenize the *line using strtok() function
   // 4. Return the char **
 
-  return NULL;
+  // ** means pointer of pointer
+  char **token_positions = malloc(sizeof(char *) * 8);
+  
+  if (token_positions != NULL){
+
+    char *token = strtok(line, " ");
+    int index = 0;
+
+    // set address of first token in token_position 'array' pointer
+    token_positions[index] = token;
+    index++;
+    
+    // tokenise remaining command
+    while (token != NULL){
+      // use NULL to parse in same line as previous strtok call
+      token = strtok(NULL, " ");
+      token_positions[index] = token;
+      index++;
+    }
+
+    token_positions[index] = NULL;
+
+  }
+
+  return token_positions;
 }
 
 /**
@@ -324,8 +356,17 @@ int main(int argc, char **argv)
 
   printf("Shell Run successful. Running now: \n");
 
-  // Run command loop
-  shellLoop();
+  // // Run command loop
+  // shellLoop();
+
+  char* line = shellReadLine();
+  printf("The fetched line is : %s \n", line);
+
+  char** args = shellTokenizeInput(line);
+  printf("The first token is %s \n", args[0]);
+  printf("The second token is %s \n", args[1]);
 
   return 0;
 }
+
+
