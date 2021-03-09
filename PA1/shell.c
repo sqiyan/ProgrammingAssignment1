@@ -8,7 +8,7 @@ int shellFind(char **args)
 
   printf("shellFind is called!\n");
 
-  /** TASK 4 **/
+  /* TASK 4 **/
   // 1. Execute the binary program 'find' in shellPrograms using execvp system call
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
@@ -18,14 +18,14 @@ int shellFind(char **args)
   return 1;
 }
 
-/**
+/*
  Allows one to display the content of the file
  */
 int shellDisplayFile(char **args)
 {
   printf("shellDisplayFile is called!\n");
 
-  /** TASK 4 **/
+  /* TASK 4 **/
   // 1. Execute the binary program 'display' in shellPrograms using execvp system call
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
@@ -43,7 +43,7 @@ int shellListDirAll(char **args)
 
   printf("shellListDirAll is called!\n");
 
-  /** TASK 4 **/
+  /* TASK 4 **/
   // 1. Execute the binary program 'listdirall' in shellPrograms using execvp system call
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
@@ -60,7 +60,7 @@ int shellListDir(char **args)
 {
   printf("shellListDir is called!\n");
 
-  /** TASK 4 **/
+  /* TASK 4 **/
   // 1. Execute the binary program 'listdir' in shellPrograms using execvp system call
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
@@ -70,7 +70,7 @@ int shellListDir(char **args)
   return 1;
 }
 
-/**
+/*
    Counts how many lines are there in a text file. 
    A line is terminated by \n character
 **/
@@ -78,7 +78,7 @@ int shellCountLine(char **args)
 {
   printf("shellCountLine is called!\n");
 
-  /** TASK 4 **/
+  /* TASK 4 **/
   // 1. Execute the binary program 'countline' in shellPrograms using execvp system call
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
@@ -88,14 +88,14 @@ int shellCountLine(char **args)
   return 1;
 }
 
-/**
+/*
  * Allows one to create a daemon process
  */
 int shellSummond(char **args)
 {
   printf("shellDaemonize is called!\n");
 
-  /** TASK 4 **/
+  /* TASK 4 **/
   // 1. Execute the binary program 'summond' in shellPrograms using execvp system call
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
@@ -105,8 +105,7 @@ int shellSummond(char **args)
   return 1;
 }
 
-
-/**
+/*
  * Allows one to check daemon process
  * 
  */
@@ -114,7 +113,7 @@ int shellCheckDaemon(char **args)
 {
   printf("shellCheckDaemon is called!\n");
 
-  /** TASK 4 **/
+  /* TASK 4 **/
   // 1. Execute the binary program 'checkdaemon' in shellPrograms using execvp system call
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
@@ -124,7 +123,7 @@ int shellCheckDaemon(char **args)
   return 1;
 }
 
-/**
+/*
    Allows one to change directory 
  */
 int shellCD(char **args)
@@ -147,7 +146,7 @@ int shellCD(char **args)
   return 1;
 }
 
-/**
+/*
    Prints out the usage and
    list of commands implemented
  */
@@ -167,14 +166,13 @@ int shellHelp(char **args)
   return 1;
 }
 
-/**
+/*
   Returns 0, to terminate execution from the shellLoop
  */
 int shellExit(char **args)
 {
   return 0;
 }
-
 
 /*
   Builtin function implementations.
@@ -240,16 +238,30 @@ int shellUsage(char **args)
   End of builtin function implementations.
 */
 
-/**
+/*
    Execute inputs when its in the default functions
    Otherwise, print error message and return to loop
  */
 int shellExecuteInput(char **args)
 {
-  /** TASK 3 **/
-
+  /* TASK 3 **/
   // 1. Check if args[0] is NULL. If it is, an empty command is entered, return 1
+  if (args[0] == NULL)
+    return 1;
   // 2. Otherwise, check if args[0] is in any of our builtin_commands, and that it is NOT cd, help, exit, or usage.
+  for (int i = 0; i < numOfBuiltinFunctions(); i++)
+  {
+    if (strcmp(builtin_commands[i],args[0]) == 0){ //strcmp returns 0 if the two strings are equal
+      if (!strcmp(args[0],"cd")
+       || !strcmp(args[0],"help") 
+       || !strcmp(args[0],"exit") 
+       || !strcmp(args[0],"usage")){
+         printf("no need to fork\n");
+         return 1;
+       }
+    }
+  }
+
   // 3. If conditions in (2) are satisfied, perform fork(). Check if fork() is successful.
   // 4. For the child process, execute the appropriate functions depending on the command in args[0]. Pass char ** args to the function.
   // 5. For the parent process, wait for the child process to complete and fetch the child's return value.
@@ -259,18 +271,20 @@ int shellExecuteInput(char **args)
   return 1;
 }
 
-/**
+/*
    Read line from stdin, return it to the Loop function to tokenize it
  */
 char *shellReadLine(void)
 {
-  /** TASK 1 **/
+  /* TASK 1 **/
   // read one line from stdin using getline()
 
   char *buffer = malloc(3);
   size_t len = 3;
-  if (buffer != NULL) getline(&buffer, &len, stdin);
-  else {
+  if (buffer != NULL)
+    getline(&buffer, &len, stdin);
+  else
+  {
     perror("something wrong somewhere");
   }
 
@@ -282,19 +296,18 @@ char *shellReadLine(void)
   return buffer;
 }
 
-/**
+/*
  Receives the *line, and return char** that tokenize the line
 **/
 
 char **shellTokenizeInput(char *line)
 {
 
-  /** TASK 2 **/
+  /* TASK 2 **/
   // 1. Allocate a memory space to contain pointers (addresses) to the first character of each word in *line. Malloc should return char** that persists after the function terminates.
   // 2. Check that char ** that is returend by malloc is not NULL
   // 3. Tokenize the *line using strtok() function
   // 4. Return the char **
-
 
   //pointer(*) to an array of pointers(*) to char arrays--> char **  --> array of strings --> array of char arrays
   char **token_positions = malloc(sizeof(char *) * 8);
@@ -307,10 +320,10 @@ char **shellTokenizeInput(char *line)
   index++;
   while (token != NULL)
   {
-      // Tokenize the rest of the command
-      token = strtok(NULL, " ");      //continue finding the next token
-      token_positions[index] = token; //store the position
-      index++;
+    // Tokenize the rest of the command
+    token = strtok(NULL, " ");      //continue finding the next token
+    token_positions[index] = token; //store the position
+    index++;
   }
 
   token_positions[index] = NULL;
@@ -318,7 +331,7 @@ char **shellTokenizeInput(char *line)
   return token_positions;
 }
 
-/**
+/*
   The main loop where one reads line,
   tokenize it, and then executes the command
  */
@@ -329,9 +342,8 @@ void shellLoop(void)
   char **args; // to tokenize them as arguments separated by spaces
   int status;  // to tell the shell program whether to terminate shell or not
 
-
-  /** TASK 5 **/
-  //write a loop where you do the following: 
+  /* TASK 5 **/
+  //write a loop where you do the following:
 
   // 1. print the message prompt
   // 2. clear the buffer and move the output to the console using fflush
@@ -341,24 +353,22 @@ void shellLoop(void)
 
   // 6. free memory location containing the strings of characters
   // 7. free memory location containing char* to the first letter of each word in the input string
-  // 8. check if shellExecuteInput returns 1. If yes, loop back to Step 1 and prompt user with new input. Otherwise, exit the shell. 
-
-
+  // 8. check if shellExecuteInput returns 1. If yes, loop back to Step 1 and prompt user with new input. Otherwise, exit the shell.
 }
 
 int main(int argc, char **argv)
 {
-   printf("Shell Run successful. Running now: \n");
- 
- char* line = shellReadLine();
- printf("The fetched line is : %s \n", line);
- 
- char** args = shellTokenizeInput(line);
- printf("The first token is %s \n", args[0]);
- printf("The second token is %s \n", args[1]);
- printf("The third token is %s \n", args[2]);
- 
- free(line);
- free(args);
- return 0;
+
+  printf("Shell Run successful. Running now: \n");
+
+  char *line = shellReadLine();
+  printf("The fetched line is : %s \n", line);
+
+  char **args = shellTokenizeInput(line);
+  printf("The first token is %s \n", args[0]);
+  printf("The second token is %s \n", args[1]);
+
+  shellExecuteInput(args);
+
+  return 0;
 }
