@@ -10,10 +10,16 @@ int shellFind(char **args)
 
   /* TASK 4 **/
   // 1. Execute the binary program 'find' in shellPrograms using execvp system call
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/shellFind_code.c",args);
+  
   // 2. Check if execvp is successful by checking its return value
+  if (return_val == -1) {
+    // 4. Print some kind of error message if it returns -1
+    perror("find: ");
+    // 5. return 1 to the caller of shellFind if execvp fails to allow loop to continue
+    return 1;
+  }
   // 3. A successful execvp never returns, while a failed execvp returns -1
-  // 4. Print some kind of error message if it returns -1
-  // 5. return 1 to the caller of shellFind if execvp fails to allow loop to continue
 
   return 1;
 }
@@ -27,11 +33,15 @@ int shellDisplayFile(char **args)
 
   /* TASK 4 **/
   // 1. Execute the binary program 'display' in shellPrograms using execvp system call
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/shellDisplayFile_code.c", args);
+
+  if (return_val < 0){
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
+    perror("smth wrong smwhere");
+  }
   // 5. return 1 to the caller of shellDisplayFile if execvp fails to allow loop to continue
-
   return 1;
 }
 
@@ -249,22 +259,79 @@ int shellExecuteInput(char **args)
   if (args[0] == NULL)
     return 1;
   // 2. Otherwise, check if args[0] is in any of our builtin_commands, and that it is NOT cd, help, exit, or usage.
+  if (!strcmp(args[0], "cd")){
+    builtin_commandFunc[0](args);
+    return 1;
+  } 
+  else if(!strcmp(args[0], "help")){
+    builtin_commandFunc[1](args);
+    return 1;
+  }
+  else if (!strcmp(args[0], "exit")) {
+    builtin_commandFunc[2](args);
+    return 1;
+  }
+  else if (!strcmp(args[0], "usage")) {
+    builtin_commandFunc[3](args);
+    return 1;
+  }
+  
+  int correctCommand = 0;
+  int commandIndex = 0;
   for (int i = 0; i < numOfBuiltinFunctions(); i++)
   {
-    if (strcmp(builtin_commands[i],args[0]) == 0){ //strcmp returns 0 if the two strings are equal
-      if (!strcmp(args[0],"cd")
-       || !strcmp(args[0],"help") 
-       || !strcmp(args[0],"exit") 
-       || !strcmp(args[0],"usage")){
-         printf("no need to fork\n");
-         return 1;
-       }
+    if (strcmp(builtin_commands[i], args[0]) == 0)
+    { //strcmp returns 0 if the two strings are equal
+      correctCommand = 1;
+      commandIndex = i;
     }
   }
 
+  int childReturnValue = 0;
+
   // 3. If conditions in (2) are satisfied, perform fork(). Check if fork() is successful.
-  // 4. For the child process, execute the appropriate functions depending on the command in args[0]. Pass char ** args to the function.
-  // 5. For the parent process, wait for the child process to complete and fetch the child's return value.
+  if (correctCommand)
+  {
+    //variable for process id
+    pid_t pid;
+    pid = fork();
+    //error case
+    if (pid < 0)
+    {
+      //printf("Error while forking");
+      exit(1);
+    }
+    //parent process
+    else if (pid > 0)
+    {
+      // 5. For the parent process, wait for the child process to complete and fetch the child's return value.
+      // parent process has to wait for the child process to finish
+      int status;
+      pid_t result = waitpid(pid, &status, WUNTRACED);
+      int exit_status = 0;
+      // if child terminates properly, WIFEXITED(status) returns TRUE
+      if (WIFEXITED(status))
+      {
+        exit_status = WEXITSTATUS(status);
+      }
+      printf("Child return value from parent is : %d\n", exit_status);
+      // TODO: review whether exit_status == return val of
+      return exit_status;
+    }
+    //child process == 0
+    else
+    {
+      // The child process has to invoke the right function depending on args[0],
+      // and call exit(1) should the function invoked return.ending on the command in args[0]. Pass char ** args to the function.
+      builtin_commandFunc[commandIndex](args);
+      exit(1);
+    }
+  }
+  else
+  {
+      printf("Invalid command received. Type help to see what commands are implemented.\n");
+  }
+
   // 6. Return the child's return value to the caller of shellExecuteInput
   // 7. If args[0] is not in builtin_command, print out an error message to tell the user that command doesn't exist and return 1
 
