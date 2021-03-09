@@ -39,10 +39,10 @@ int shellDisplayFile(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellDisplayFile if execvp fails to allow loop to continue
-  char* display = {'d','i','s','p','l','a','y','\0'};
-  char* text = {'a','n','o','t','h','e','r','_','t','e','x','t','.','t','x','t','\0'};
-  char** inp = {display,text};
-  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/display", inp);
+  // char* display = {'d','i','s','p','l','a','y','\0'};
+  // char* text = {'a','n','o','t','h','e','r','_','t','e','x','t','.','t','x','t','\0'};
+  // char** inp = {display,text};
+  int return_val = execvp("/home/kaifeng/Documents/ProgrammingAssignment1/PA1/shellPrograms/display", args);
 
   if (return_val < 0){
     perror("smth wrong smwhere");
@@ -384,7 +384,7 @@ char **shellTokenizeInput(char *line)
   //pointer(*) to an array of pointers(*) to char arrays--> char **  --> array of strings --> array of char arrays
   char **token_positions = malloc(sizeof(char *) * 8);
   //pointer to char array for string until delimiter
-  char *token = strtok(line, " ");
+  char *token = strtok(line, SHELL_INPUT_DELIM);
   //initialize index for while loop
   int index = 0;
   //assign first string to token_positions array
@@ -393,7 +393,7 @@ char **shellTokenizeInput(char *line)
   while (token != NULL)
   {
     // Tokenize the rest of the command
-    token = strtok(NULL, " ");      //continue finding the next token
+    token = strtok(NULL, SHELL_INPUT_DELIM);      //continue finding the next token
     token_positions[index] = token; //store the position
     index++;
   }
