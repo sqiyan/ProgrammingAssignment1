@@ -12,10 +12,12 @@ int shellFind(char **args)
   // 1. Execute the binary program 'find' in shellPrograms using execvp system call
 
   // int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/find",args);
-  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/find",args);
-  
+
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/find", args);
+
   // 2. Check if execvp is successful by checking its return value
-  if (return_val == -1) {
+  if (return_val == -1)
+  {
     // 4. Print some kind of error message if it returns -1
     perror("find: ");
     // 5. return 1 to the caller of shellFind if execvp fails to allow loop to continue
@@ -42,9 +44,10 @@ int shellDisplayFile(char **args)
   // char* display = {'d','i','s','p','l','a','y','\0'};
   // char* text = {'a','n','o','t','h','e','r','_','t','e','x','t','.','t','x','t','\0'};
   // char** inp = {display,text};
-  int return_val = execvp("/home/kaifeng/Documents/ProgrammingAssignment1/PA1/shellPrograms/display", args);
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/display", args);
 
-  if (return_val < 0){
+  if (return_val < 0)
+  {
     perror("smth wrong smwhere");
   }
   return 1;
@@ -64,7 +67,12 @@ int shellListDirAll(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellListDirAll if execvp fails to allow loop to continue
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/listdirall", args);
 
+  if (return_val < 0)
+  {
+    perror("smth wrong smwhere");
+  }
   return 1;
 }
 
@@ -81,7 +89,11 @@ int shellListDir(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellListDir
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/listdir", args);
 
+  if (return_val < 0){
+    perror("smth wrong smwhere");
+  }
   return 1;
 }
 
@@ -99,7 +111,11 @@ int shellCountLine(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellCountLine if execvp fails to allow loop to continue
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/countline", args);
 
+  if (return_val < 0){
+    perror("smth wrong smwhere");
+  }
   return 1;
 }
 
@@ -116,7 +132,11 @@ int shellSummond(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellDaemonize if execvp fails to allow loop to continue
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/summond", args);
 
+  if (return_val < 0){
+    perror("smth wrong smwhere");
+  }
   return 1;
 }
 
@@ -134,7 +154,11 @@ int shellCheckDaemon(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellCheckDaemon if execvp fails to allow loop to continue
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/checkdaemon", args);
 
+  if (return_val < 0){
+    perror("smth wrong smwhere");
+  }
   return 1;
 }
 
@@ -264,23 +288,27 @@ int shellExecuteInput(char **args)
   if (args[0] == NULL)
     return 1;
   // 2. Otherwise, check if args[0] is in any of our builtin_commands, and that it is NOT cd, help, exit, or usage.
-  if (!strcmp(args[0], "cd")){
+  if (!strcmp(args[0], "cd"))
+  {
     builtin_commandFunc[0](args);
     return 1;
-  } 
-  else if(!strcmp(args[0], "help")){
+  }
+  else if (!strcmp(args[0], "help"))
+  {
     builtin_commandFunc[1](args);
     return 1;
   }
-  else if (!strcmp(args[0], "exit")) {
+  else if (!strcmp(args[0], "exit"))
+  {
     builtin_commandFunc[2](args);
     return 1;
   }
-  else if (!strcmp(args[0], "usage")) {
+  else if (!strcmp(args[0], "usage"))
+  {
     builtin_commandFunc[3](args);
     return 1;
   }
-  
+
   int correctCommand = 0;
   int commandIndex = 0;
   for (int i = 0; i < numOfBuiltinFunctions(); i++)
@@ -334,7 +362,7 @@ int shellExecuteInput(char **args)
   }
   else
   {
-      printf("Invalid command received. Type help to see what commands are implemented.\n");
+    printf("Invalid command received. Type help to see what commands are implemented.\n");
   }
 
   // 6. Return the child's return value to the caller of shellExecuteInput
@@ -393,8 +421,8 @@ char **shellTokenizeInput(char *line)
   while (token != NULL)
   {
     // Tokenize the rest of the command
-    token = strtok(NULL, SHELL_INPUT_DELIM);      //continue finding the next token
-    token_positions[index] = token; //store the position
+    token = strtok(NULL, SHELL_INPUT_DELIM); //continue finding the next token
+    token_positions[index] = token;          //store the position
     index++;
   }
 
@@ -426,21 +454,27 @@ void shellLoop(void)
   // 6. free memory location containing the strings of characters
   // 7. free memory location containing char* to the first letter of each word in the input string
   // 8. check if shellExecuteInput returns 1. If yes, loop back to Step 1 and prompt user with new input. Otherwise, exit the shell.
+
+  while (status){
+    printf("CSEShell>");
+    fflush(stdin);
+    line = shellReadLine();
+    args = shellTokenizeInput(line);
+    status = shellExecuteInput(args);
+
+    free(line);
+    free(args);
+  }
+  exit(1);
 }
 
 int main(int argc, char **argv)
 {
-
-  printf("Shell Run successful. Running now: \n");
-
-  char *line = shellReadLine();
-  printf("The fetched line is : %s \n", line);
-
-  char **args = shellTokenizeInput(line);
-  printf("The first token is %s \n", args[0]);
-  printf("The second token is %s \n", args[1]);
-
-  shellExecuteInput(args);
-
-  return 0;
+ 
+ printf("Shell Run successful. Running now: \n");
+ 
+ // Run command loop
+ shellLoop();
+ return 0;
 }
+

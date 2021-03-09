@@ -4,7 +4,6 @@
 */
 int shellFind_code(char** args){
 
-    printf("hellow world I am being executed\n");
 
 	if (args[1] == NULL){ 
 		printf("Usage: find keyword\n");
