@@ -10,7 +10,9 @@ int shellFind(char **args)
 
   /* TASK 4 **/
   // 1. Execute the binary program 'find' in shellPrograms using execvp system call
-  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/shellFind_code.c",args);
+
+  // int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/find",args);
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/find",args);
   
   // 2. Check if execvp is successful by checking its return value
   if (return_val == -1) {
@@ -33,15 +35,18 @@ int shellDisplayFile(char **args)
 
   /* TASK 4 **/
   // 1. Execute the binary program 'display' in shellPrograms using execvp system call
-  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/shellDisplayFile_code.c", args);
-
-  if (return_val < 0){
   // 2. Check if execvp is successful by checking its return value
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
+  // 5. return 1 to the caller of shellDisplayFile if execvp fails to allow loop to continue
+  char* display = {'d','i','s','p','l','a','y','\0'};
+  char* text = {'a','n','o','t','h','e','r','_','t','e','x','t','.','t','x','t','\0'};
+  char** inp = {display,text};
+  int return_val = execvp("/home/khaizon/documents/ProgrammingAssignment1/PA1/shellPrograms/display", inp);
+
+  if (return_val < 0){
     perror("smth wrong smwhere");
   }
-  // 5. return 1 to the caller of shellDisplayFile if execvp fails to allow loop to continue
   return 1;
 }
 

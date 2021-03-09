@@ -4,6 +4,8 @@
 */
 int shellFind_code(char** args){
 
+    printf("hellow world I am being executed\n");
+
 	if (args[1] == NULL){ 
 		printf("Usage: find keyword\n");
 		return 1;
@@ -46,7 +48,11 @@ int shellFind_code(char** args){
         d_name = entry->d_name;
 
         /* Print the name of the file and directory if it matches the keyword */
-        if(strstr(d_name, toMatch)!=NULL){
+        // printf("d_name is %s\n",d_name);
+        // printf("to match is %s\n",toMatch);
+        // printf("%s\n",strstr(d_name, toMatch));
+        if(strstr(d_name, toMatch) != NULL){
+            printf("printing directory nOW\n");
         	printf ("%s/%s\n", dir_name, d_name);
         }
 
