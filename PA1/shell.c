@@ -343,7 +343,6 @@ int shellExecuteInput(char **args)
       {
         exit_status = WEXITSTATUS(status);
       }
-      printf("Child return value from parent is : %d\n", exit_status);
       // TODO: review whether exit_status == return val of
       return exit_status;
     }

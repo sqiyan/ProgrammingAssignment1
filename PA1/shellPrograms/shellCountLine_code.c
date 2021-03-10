@@ -15,7 +15,29 @@ int shellCountLine_code(char **args)
     // 6. Close the FILE*
     // 7. Print out how many lines are there in this particular filename
     // 8. Return 1, to exit program
+    FILE *fp;
+    char buf[1000];
 
+    if (args[1] != NULL){
+         fp =fopen(args[1],"r");
+    }
+    else{
+        printf("Please supply a file name\n");
+        return 1;
+    }
+
+    if (!fp){
+    	printf("CSEShell: File doesn't exist.\n");
+        return 1;
+    }
+    int count = 0;
+    while (fgets(buf,1000, fp)!=NULL)
+        count ++;
+
+    printf("There are %d lines in %s\n",count, args[1]);
+
+    fclose(fp);
+    return 1;
     return 1;
 }
 
