@@ -290,23 +290,19 @@ int shellExecuteInput(char **args)
   // 2. Otherwise, check if args[0] is in any of our builtin_commands, and that it is NOT cd, help, exit, or usage.
   if (!strcmp(args[0], "cd"))
   {
-    builtin_commandFunc[0](args);
-    return 1;
+    return builtin_commandFunc[0](args);
   }
   else if (!strcmp(args[0], "help"))
   {
-    builtin_commandFunc[1](args);
-    return 1;
+    return builtin_commandFunc[1](args);
   }
   else if (!strcmp(args[0], "exit"))
   {
-    builtin_commandFunc[2](args);
-    return 1;
+    return builtin_commandFunc[2](args);
   }
   else if (!strcmp(args[0], "usage"))
   {
-    builtin_commandFunc[3](args);
-    return 1;
+    return builtin_commandFunc[3](args);
   }
 
   int correctCommand = 0;
@@ -354,6 +350,7 @@ int shellExecuteInput(char **args)
     //child process == 0
     else
     {
+      printf("Fork words, waiting for child\n");
       // The child process has to invoke the right function depending on args[0],
       // and call exit(1) should the function invoked return.ending on the command in args[0]. Pass char ** args to the function.
       builtin_commandFunc[commandIndex](args);
@@ -455,6 +452,7 @@ void shellLoop(void)
   // 7. free memory location containing char* to the first letter of each word in the input string
   // 8. check if shellExecuteInput returns 1. If yes, loop back to Step 1 and prompt user with new input. Otherwise, exit the shell.
 
+  //declared "status " has a starting value of 32764 but it works to start the loop
   while (status){
     printf("CSEShell>");
     fflush(stdin);
