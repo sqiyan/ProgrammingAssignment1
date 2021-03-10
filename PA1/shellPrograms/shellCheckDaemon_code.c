@@ -10,6 +10,8 @@ int shellCheckDaemon_code()
    sprintf(command, "ps -efj | grep summond  | grep -v tty > output.txt");
 
    // TODO: Execute the command using system(command) and check its return value
+   if (system(command) == -1)
+      return 1;
 
    free(command);
 
@@ -20,7 +22,23 @@ int shellCheckDaemon_code()
    // 3. Increase the daemon count whenever we encounter a line
    // 4. Close the file
    // 5. print your result
+   FILE *fp;
+   char buf[1000];
 
+   fp = fopen("output.txt", "r");
+
+   if (!fp)
+   {
+      printf("CSEShell: File doesn't exist.\n");
+      return 1;
+   }
+
+   while (fgets(buf, 1000, fp) != NULL){
+      printf("%s",buf);
+      live_daemons++;
+   }
+
+   fclose(fp);
    if (live_daemons == 0)
       printf("No daemon is alive right now\n");
    else
@@ -28,8 +46,7 @@ int shellCheckDaemon_code()
       printf("There are in total of %d live daemons \n", live_daemons);
    }
 
-
-   // TODO: close any file pointers and free any statically allocated memory 
+   // TODO: close any file pointers and free any statically allocated memory
 
    return 1;
 }
